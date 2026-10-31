@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Clan Recruitment</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito:wght@700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sky-1: #4a8be0;
+    --sky-2: #1f4f9a;
+    --navy: #0f2a55;
+    --wood: #8a5428;
+    --wood-dark: #4a2a10;
+    --parch: #eadfc4;
+    --parch-2: #dccdaa;
+    --brown: #3b2410;
+    --gold-1: #ffe27a;
+    --gold-2: #f0a41c;
+    --green-1: #a6e34a;
+    --green-2: #62b21c;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Nunito', system-ui, sans-serif; font-weight: 700; line-height: 1.5; color: var(--brown);
+    min-height: 100vh;
+    background:
+      repeating-linear-gradient(45deg, rgba(255,255,255,.05) 0 28px, transparent 28px 56px),
+      linear-gradient(180deg, var(--sky-1) 0%, var(--sky-2) 100%) fixed;
+  }
+  h1, h2, .game { font-family: 'Lilita One', 'Nunito', sans-serif; font-weight: 400; }
+  /* White game text with a dark outline, like the in-game UI */
+  .outline {
+    color: #fff;
+    text-shadow: -2px -2px 0 var(--navy), 2px -2px 0 var(--navy), -2px 2px 0 var(--navy), 2px 2px 0 var(--navy), 0 3px 0 var(--navy);
+  }
+  a { color: inherit; }
+  :focus-visible { outline: 3px solid #fff; outline-offset: 3px; border-radius: 8px; }
+  .wrap { max-width: 920px; margin: 0 auto; padding: 28px 16px 8px; }
+
+  /* Wood frame */
+  .wood {
+    background: repeating-linear-gradient(90deg, #8f5a2b 0 7px, #82501f 7px 14px);
+    border: 4px solid var(--wood-dark); border-radius: 18px;
+    box-shadow: inset 0 3px 0 rgba(255,255,255,.22), 0 7px 0 rgba(0,0,0,.35);
+  }
+
+  /* Header card */
+  .head { padding: 20px; display: grid; grid-template-columns: auto 1fr; gap: 22px; align-items: center; }
+  .badge-box {
+    width: 150px; height: 150px; display: grid; place-items: center; border-radius: 16px;
+    background: radial-gradient(circle at 50% 35%, #6fb0ff, #2a64b8); border: 4px solid var(--wood-dark);
+    box-shadow: inset 0 3px 0 rgba(255,255,255,.35);
+  }
+  .badge-box img { width: 118px; height: 118px; object-fit: contain; filter: drop-shadow(0 5px 4px rgba(0,0,0,.5)); }
+  .name-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  h1 { font-size: clamp(2rem, 7vw, 3.2rem); line-height: 1.05; overflow-wrap: anywhere; }
+  .lvl {
+    min-width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; font-size: 1.5rem;
+    background: radial-gradient(circle at 40% 30%, #6fb0ff, #1f4f9a); border: 4px solid var(--gold-2);
+    box-shadow: 0 3px 0 rgba(0,0,0,.4);
+  }
+  .meta { display: flex; flex-wrap: wrap; gap: 2px 16px; margin-top: 4px; color: #fbe9c4; font-weight: 800; text-shadow: 0 2px 0 var(--wood-dark); }
+  .desc { margin-top: 12px; background: var(--parch); border: 3px solid var(--wood-dark); border-radius: 12px; padding: 10px 14px; }
+  .cta { margin-top: 16px; display: flex; flex-wrap: wrap; gap: 12px; }
+
+  /* Game buttons */
+  .btn {
+    font-family: 'Lilita One', sans-serif; font-size: 1.35rem; text-decoration: none; cursor: pointer; display: inline-block;
+    padding: 9px 30px; border-radius: 12px; color: #fff; border: 3px solid;
+    text-shadow: -1px -1px 0 rgba(0,0,0,.55), 1px -1px 0 rgba(0,0,0,.55), -1px 1px 0 rgba(0,0,0,.55), 1px 1px 0 rgba(0,0,0,.55), 0 2px 0 rgba(0,0,0,.55);
+    transition: transform .08s ease, box-shadow .08s ease;
+  }
+  .btn-green { background: linear-gradient(var(--green-1), var(--green-2)); border-color: #2f6a0b; box-shadow: 0 6px 0 #2f6a0b, inset 0 3px 0 rgba(255,255,255,.5); }
+  .btn-gold { background: linear-gradient(var(--gold-1), var(--gold-2)); border-color: #8a5a08; box-shadow: 0 6px 0 #8a5a08, inset 0 3px 0 rgba(255,255,255,.55); font-size: 1.15rem; padding: 10px 22px; }
+  .btn:active { transform: translateY(5px); }
+  .btn-green:active { box-shadow: 0 1px 0 #2f6a0b, inset 0 3px 0 rgba(255,255,255,.5); }
+  .btn-gold:active { box-shadow: 0 1px 0 #8a5a08, inset 0 3px 0 rgba(255,255,255,.55); }
+
+  /* Resource-bar style stats */
+  .res-row { display: flex; flex-wrap: wrap; gap: 12px; margin: 26px 0 8px; }
+  .res {
+    flex: 1 1 180px; display: flex; justify-content: space-between; align-items: center; gap: 10px;
+    background: rgba(8,24,56,.72); border: 3px solid #6f9ad8; border-radius: 999px; padding: 6px 18px;
+    box-shadow: inset 0 2px 0 rgba(255,255,255,.18), 0 4px 0 rgba(0,0,0,.3);
+  }
+  .res .k { color: #cfe0fb; font-weight: 800; }
+  .res .v { font-family: 'Lilita One', sans-serif; font-size: 1.6rem; color: var(--gold-1); text-shadow: 0 2px 0 rgba(0,0,0,.6); }
+
+  /* Panels: wood title plate, parchment body */
+  section { margin-top: 34px; }
+  .plate { display: inline-block; margin: 0 0 -6px 18px; padding: 6px 26px 12px; border-radius: 14px 14px 0 0; position: relative; z-index: 1; }
+  .plate h2 { font-size: 1.6rem; }
+  .plate small { font-family: 'Nunito', sans-serif; font-weight: 800; font-size: .95rem; color: #fbe9c4; margin-left: 8px; text-shadow: 0 2px 0 var(--wood-dark); }
+  .panel { background: var(--parch); border: 4px solid var(--wood-dark); border-radius: 16px; box-shadow: 0 7px 0 rgba(0,0,0,.35); overflow: hidden; position: relative; }
+
+  .row { display: grid; align-items: center; gap: 12px; padding: 10px 16px; }
+  .row:nth-child(even) { background: var(--parch-2); }
+  .panel > .pad { padding: 14px 16px; }
+
+  /* Requirements */
+  .req { grid-template-columns: 1fr auto; }
+  .req .k { font-weight: 800; }
+  .req .v { font-family: 'Lilita One', sans-serif; font-size: 1.2rem; display: flex; align-items: center; gap: 8px; text-align: right; }
+  .req .v img { width: 34px; height: 34px; object-fit: contain; }
+
+  /* War */
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; }
+  .chip { width: 32px; height: 32px; display: grid; place-items: center; border-radius: 9px; font-family: 'Lilita One', sans-serif; color: #fff; border: 3px solid rgba(0,0,0,.45); text-shadow: 0 2px 0 rgba(0,0,0,.4); }
+  .chip.win { background: #4fb032; } .chip.lose { background: #d9473d; } .chip.tie { background: #8b8d94; }
+  .war { grid-template-columns: 64px 1fr auto; }
+  .war .res-t { font-family: 'Lilita One', sans-serif; font-size: 1.15rem; }
+  .war .res-t.win { color: #2f7d17; } .war .res-t.lose { color: #b6302a; } .war .res-t.tie { color: #5d5f66; }
+  .war .opp { display: flex; align-items: center; gap: 10px; min-width: 0; }
+  .war .opp img { width: 32px; height: 32px; object-fit: contain; }
+  .war .opp span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .war .score { white-space: nowrap; }
+
+  /* Members */
+  .member { grid-template-columns: 38px 48px 1fr auto; }
+  .rank { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font-family: 'Lilita One', sans-serif; color: #fff; background: #7a5a3a; border: 3px solid var(--wood-dark); }
+  .member:nth-child(1) .rank { background: #f0a41c; } .member:nth-child(2) .rank { background: #a9b3c1; } .member:nth-child(3) .rank { background: #c47a3c; }
+  .th { width: 48px; height: 48px; object-fit: contain; }
+  .th-fallback { width: 48px; height: 48px; display: grid; place-items: center; border-radius: 10px; background: var(--wood); border: 3px solid var(--wood-dark); color: #fff; font-family: 'Lilita One', sans-serif; }
+  .who { min-width: 0; }
+  .who .n { font-family: 'Lilita One', sans-serif; font-size: 1.15rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .who .r { font-size: .85rem; color: #6b4a2a; }
+  .who .r.leader, .who .r.coLeader { color: #b35c00; }
+  .tro { display: flex; align-items: center; gap: 6px; justify-content: flex-end; font-family: 'Lilita One', sans-serif; font-size: 1.15rem; }
+  .tro img { width: 28px; height: 28px; object-fit: contain; }
+  .don { text-align: right; font-size: .85rem; color: #6b4a2a; }
+
+  .skeleton { padding: 18px 16px; }
+  .error { color: #b6302a; }
+  footer { margin: 44px auto 28px; max-width: 920px; padding: 0 16px; text-align: center; color: #dbe8ff; font-size: .88rem; text-shadow: 0 1px 0 rgba(0,0,0,.4); }
+  footer a { color: var(--gold-1); }
+
+  @media (max-width: 640px) {
+    .head { grid-template-columns: 1fr; justify-items: center; text-align: center; }
+    .name-row, .meta, .cta { justify-content: center; }
+    .badge-box { width: 124px; height: 124px; } .badge-box img { width: 96px; height: 96px; }
+    .member { grid-template-columns: 34px 42px 1fr auto; gap: 8px; padding: 10px; }
+    .th, .th-fallback { width: 42px; height: 42px; }
+    .war { grid-template-columns: 52px 1fr; } .war .score { grid-column: 2; }
+  }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .btn { transition: none; } }
+</style>
+</head>
+<body>
+<main class="wrap">
+
+  <header class="wood head">
+    <div class="badge-box"><img id="badge" alt="" hidden></div>
+    <div>
+      <div class="name-row">
+        <h1 class="outline" id="name">Loading…</h1>
+        <div class="lvl outline" id="lvl" hidden></div>
+      </div>
+      <div class="meta" id="meta"></div>
+      <p class="desc" id="desc" hidden></p>
+      <div class="cta">
+        <a class="btn btn-green" id="join" href="#" target="_blank" rel="noopener">Join this clan</a>
+        <button class="btn btn-gold" id="copy" type="button">Copy clan tag</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="res-row" id="strip"></div>
+
+  <section aria-labelledby="req-h">
+    <div class="wood plate"><h2 class="outline" id="req-h">What we look for</h2></div>
+    <div class="panel" id="reqs"><div class="skeleton">Loading…</div></div>
+  </section>
+
+  <section aria-labelledby="war-h">
+    <div class="wood plate"><h2 class="outline" id="war-h">War record</h2></div>
+    <div class="panel">
+      <div class="pad" id="chips" hidden></div>
+      <div id="wars"><div class="skeleton">Loading war log…</div></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="mem-h">
+    <div class="wood plate"><h2 class="outline" id="mem-h">Members<small id="count"></small></h2></div>
+    <div class="panel" id="members"><div class="skeleton">Loading members…</div></div>
+  </section>
+</main>
+
+<footer>
+  Live data from the official Clash of Clans API. Game icons by <a href="https://assets.clashk.ing" target="_blank" rel="noopener">ClashKing Assets</a>.<br>
+  This fan site isn’t affiliated with, endorsed by or sponsored by Supercell. Clash of Clans is a trademark of Supercell.
+</footer>
+
+<script>
+(function () {
+  var ICON = 'https://assets.clashk.ing/buildings/home-village/town_hall/level_';
+  var ROLES = { leader: 'Leader', coLeader: 'Co-leader', admin: 'Elder', member: 'Member' };
+  var TYPES = { open: 'Anyone can join', inviteOnly: 'Invite only', closed: 'Closed' };
+  var WAR_FREQ = {
+    always: 'Always at war', moreThanOncePerWeek: 'More than once a week', oncePerWeek: 'Once a week',
+    lessThanOncePerWeek: 'Less than once a week', never: 'Rarely', unknown: 'Not set'
+  };
+
+  function $(id) { return document.getElementById(id); }
+  function el(tag, cls, text) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text !== undefined) e.textContent = text;
+    return e;
+  }
+  function num(n) { return Number(n || 0).toLocaleString('en-US'); }
+
+  function res(label, value) {
+    var d = el('div', 'res');
+    d.appendChild(el('span', 'k', label));
+    d.appendChild(el('span', 'v', value));
+    return d;
+  }
+
+  function req(key, value, iconUrl) {
+    var row = el('div', 'row req');
+    row.appendChild(el('div', 'k', key));
+    var v = el('div', 'v');
+    if (iconUrl) {
+      var i = el('img'); i.src = iconUrl; i.alt = '';
+      i.onerror = function () { i.remove(); };
+      v.appendChild(i);
+    }
+    v.appendChild(document.createTextNode(value));
+    row.appendChild(v);
+    return row;
+  }
+
+  function thNode(level) {
+    if (!level) return el('div', 'th-fallback', '\u2013');
+    var img = el('img', 'th');
+    img.alt = 'Town Hall ' + level;
+    img.loading = 'lazy';
+    img.src = ICON + level + '.webp';
+    img.onerror = function () {
+      var fb = el('div', 'th-fallback', 'TH' + level);
+      if (img.parentNode) img.parentNode.replaceChild(fb, img);
+    };
+    return img;
+  }
+
+  function renderClan(c) {
+    document.title = c.name + ' | Clan Recruitment';
+    $('name').textContent = c.name;
+    var lvl = $('lvl'); lvl.textContent = c.clanLevel; lvl.title = 'Clan level ' + c.clanLevel; lvl.hidden = false;
+    if (c.description) { $('desc').textContent = c.description; $('desc').hidden = false; }
+
+    var meta = $('meta');
+    meta.textContent = '';
+    [c.tag, c.location && c.location.name, c.chatLanguage && c.chatLanguage.name]
+      .filter(Boolean).forEach(function (t) { meta.appendChild(el('span', '', t)); });
+
+    var b = $('badge');
+    b.src = c.badgeUrls.large || c.badgeUrls.medium;
+    b.alt = c.name + ' badge';
+    b.hidden = false;
+
+    $('join').href = 'https://link.clashofclans.com/en?action=OpenClanProfile&tag=' + encodeURIComponent(c.tag.replace('#', ''));
+    $('copy').onclick = function () {
+      var btn = $('copy');
+      var done = function () { btn.textContent = 'Copied!'; setTimeout(function () { btn.textContent = 'Copy clan tag'; }, 1600); };
+      if (navigator.clipboard) navigator.clipboard.writeText(c.tag).then(done, done); else done();
+    };
+
+    var s = $('strip');
+    s.textContent = '';
+    s.appendChild(res('Members', c.members + '/50'));
+    s.appendChild(res('War wins', c.isWarLogPublic ? num(c.warWins) : '\u2013'));
+    s.appendChild(res('Win streak', c.isWarLogPublic ? String(c.warWinStreak) : '\u2013'));
+    s.appendChild(res('Clan points', num(c.clanPoints)));
+
+    var r = $('reqs');
+    r.textContent = '';
+    var th = c.requiredTownhallLevel;
+    r.appendChild(req('Town Hall', th ? 'TH ' + th + ' or higher' : 'Any', th ? ICON + th + '.webp' : null));
+    r.appendChild(req('Trophies', c.requiredTrophies ? num(c.requiredTrophies) + ' or more' : 'Any'));
+    if (c.requiredBuilderBaseTrophies) r.appendChild(req('Builder trophies', num(c.requiredBuilderBaseTrophies) + ' or more'));
+    r.appendChild(req('Joining', TYPES[c.type] || c.type));
+    r.appendChild(req('War frequency', WAR_FREQ[c.warFrequency] || c.warFrequency));
+    if (c.warLeague) r.appendChild(req('War league', c.warLeague.name));
+
+    var list = $('members');
+    list.textContent = '';
+    $('count').textContent = c.memberList.length + ' players';
+    c.memberList.forEach(function (m) {
+      var row = el('div', 'row member');
+      row.appendChild(el('div', 'rank', String(m.clanRank)));
+      row.appendChild(thNode(m.townHallLevel));
+      var who = el('div', 'who');
+      who.appendChild(el('div', 'n', m.name));
+      who.appendChild(el('div', 'r ' + m.role, ROLES[m.role] || m.role));
+      row.appendChild(who);
+      var right = el('div');
+      var tro = el('div', 'tro');
+      var li = m.league && m.league.iconUrls && (m.league.iconUrls.small || m.league.iconUrls.tiny);
+      if (li) { var im = el('img'); im.src = li; im.alt = ''; im.loading = 'lazy'; tro.appendChild(im); }
+      tro.appendChild(document.createTextNode(num(m.trophies)));
+      right.appendChild(tro);
+      right.appendChild(el('div', 'don', num(m.donations) + ' donated'));
+      row.appendChild(right);
+      list.appendChild(row);
+    });
+  }
+
+  function renderWars(log) {
+    var box = $('wars');
+    var chips = $('chips');
+    box.textContent = '';
+    chips.textContent = '';
+    var wars = (log.items || []).filter(function (w) { return w.result && w.opponent && w.opponent.name; }).slice(0, 10);
+    if (!wars.length) { box.appendChild(el('div', 'skeleton', 'No recent regular wars to show.')); return; }
+
+    var L = { win: 'W', lose: 'L', tie: 'T' };
+    var T = { win: 'Win', lose: 'Loss', tie: 'Tie' };
+    var strip = el('div', 'chips');
+    strip.setAttribute('aria-label', 'Results of the last ' + wars.length + ' wars, oldest to newest');
+    wars.slice().reverse().forEach(function (w) {
+      var c = el('span', 'chip ' + w.result, L[w.result] || '?');
+      c.title = T[w.result] || '';
+      strip.appendChild(c);
+    });
+    chips.appendChild(strip);
+    chips.hidden = false;
+
+    wars.slice(0, 6).forEach(function (w) {
+      var row = el('div', 'row war');
+      row.appendChild(el('div', 'res-t ' + w.result, T[w.result] || '?'));
+      var opp = el('div', 'opp');
+      var img = el('img'); img.alt = ''; img.loading = 'lazy';
+      img.src = (w.opponent.badgeUrls && (w.opponent.badgeUrls.small || w.opponent.badgeUrls.medium)) || '';
+      opp.appendChild(img);
+      opp.appendChild(el('span', '', 'vs ' + w.opponent.name));
+      row.appendChild(opp);
+      row.appendChild(el('div', 'score', w.teamSize + 'v' + w.teamSize + ', ' + w.clan.stars + '\u2605 to ' + w.opponent.stars + '\u2605'));
+      box.appendChild(row);
+    });
+  }
+
+  function showError(id, msg) {
+    var box = $(id);
+    box.textContent = '';
+    box.appendChild(el('div', 'skeleton error', msg));
+  }
+
+  fetch('/api/clan').then(function (r) { return r.json().then(function (d) { if (!r.ok) throw new Error(d.error || 'Request failed'); return d; }); })
+    .then(renderClan)
+    .catch(function (e) {
+      $('name').textContent = 'Clan unavailable';
+      showError('reqs', 'Couldn’t load clan data: ' + e.message);
+      showError('members', 'Couldn’t load members.');
+    });
+
+  fetch('/api/warlog').then(function (r) { return r.json().then(function (d) { if (!r.ok) throw new Error(d.error || 'Request failed'); return d; }); })
+    .then(function (log) {
+      if (log.private) throw new Error('private');
+      renderWars(log);
+    })
+    .catch(function () {
+      var box = $('wars');
+      box.textContent = '';
+      box.appendChild(el('div', 'skeleton', 'The war log is private. Set it to public in the clan settings to show recent wars here.'));
+    });
+})();
+</script>
+</body>
+</html>
